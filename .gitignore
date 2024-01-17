@@ -96,7 +96,9 @@ modules.order
 !.gitattributes
 !.gitignore
 !.mailmap
-
+!.vscode/
+!.vscode/*.json
+!.vscode/*.py
 #
 # Generated include files
 #
