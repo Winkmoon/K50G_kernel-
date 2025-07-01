@@ -62,9 +62,12 @@ jobs:
           sudo apt install git
 
       - name: 初始化版本库并同步
+        working-directory: ${{ env.WORKSPACE_DIR }}
         run: |
 
-          git clone https://github.com/Winkmoon/K50G_kernel-.git -b main
+          mkdir -p kernel_platform
+          cd kernel_platform
+          git clone https://github.com/Winkmoon/K50G_kernel-.git --depth=1 -b main .
           
           
           find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
