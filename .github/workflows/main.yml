@@ -62,7 +62,6 @@ jobs:
           sudo apt install git
 
       - name: 初始化版本库并同步
-        working-directory: ${{ env.WORKSPACE_DIR }}
         run: |
 
           git clone https://github.com/Winkmoon/K50G_kernel-.git -b main
