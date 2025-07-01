@@ -84,7 +84,7 @@ jobs:
         run: |
         # 克隆指定仓库的main分支
 
-        git clone https://github.com/Winkmoon/K50G_kernel-.git -b main --depth=1
+        git clone ＂https://github.com/Winkmoon/K50G_kernel-" --depth=1 -b main
     
         # 删除受保护的abi导出文件（如果存在）
         find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
