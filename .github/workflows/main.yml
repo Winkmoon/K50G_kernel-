@@ -65,7 +65,7 @@ jobs:
         working-directory: ${{ env.WORKSPACE_DIR }}
         run: |
 
-          git clone https://github.com/Winkmoon/K50G_kernel-.git --depth=1 -b main .
+          git clone https://github.com/Winkmoon/K50G_kernel-.git -b main
           
           
           find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
