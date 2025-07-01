@@ -1,4 +1,4 @@
-name: ShirokoNeko-K50G-Xinran_Next-4k
+name: ShirokoNeko-K50G-Xinran-4k
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ env:
   RETENTION_COUNT: 3  # 从7减少到3
   CPU: 'sm8450'
   FEIL: 'k50g'
-  CPUD: '不知道'
+  CPUD: 'taro'
   ANDROID_VERSION: 'android12'
   KERNEL_VERSION: '5.1'
   KERNEL_NAME: 'ShirokoNeko-K50G-Xinran-4k'
@@ -57,18 +57,16 @@ jobs:
           sudo apt update
           sudo apt install -y python3 git curl
 
-      - name: 安装和配置 repo 工具
+      - name: 安装git
         run: |
-          curl https://storage.googleapis.com/git-repo-downloads/repo > ~/repo
-          chmod a+x ~/repo
-          sudo mv ~/repo /usr/local/bin/repo
+          sudo apt install git
 
       - name: 初始化版本库并同步
         working-directory: ${{ env.WORKSPACE_DIR }}
         run: |
 
-          git  -u https://github.com/OnePlusOSS/kernel_manifest.git -b oneplus/${{ env.CPU }} -m ${{ env.FEIL }}.xml --depth=1
-          repo sync
+          git clone https://github.com/Winkmoon/K50G_kernel-.git --depth=1 -b main .
+          
           
           find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
           
@@ -77,16 +75,6 @@ jobs:
               sed -i 's/ -dirty//g' "$script_path"
             fi
           done
-    
-        # 删除受保护的abi导出文件（如果存在）
-        find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
-    
-        # 移除setlocalversion脚本中的"-dirty"标记
-        for script_path in kernel_platform/common/scripts/setlocalversion kernel_platform/msm-kernel/scripts/setlocalversion kernel_platform/external/dtc/scripts/setlocalversion; do
-        if [ -f "$script_path" ]; then
-        sed -i 's/ -dirty//g' "$script_path"
-        fi
-        done
       
       - name: 设置 KernelSU 分支
         id: setup_branch
@@ -167,7 +155,7 @@ jobs:
       - name: 构建内核
         working-directory: ${{ env.WORKSPACE_DIR }}
         run: |
-          if [[ "${{ env.CPU }}" == "sm8650" || "${{ env.CPU }}" == "sm8750" ]]; then
+          if [[ "${{ env.CPU }}" == "sm8450" || "${{ env.CPU }}" == "sm8750" ]]; then
             ./kernel_platform/build_with_bazel.py -t ${{ env.CPUD }} gki --action_env=KSU_VERSION 
           else
             LTO=thin ./kernel_platform/oplus/build/oplus_build_kernel.sh ${{ env.CPUD }} gki
@@ -256,11 +244,9 @@ jobs:
           tag_name: "build-${{ github.run_id }}"
           name: "OnePlus_ACE5 Build ${{ github.run_number }}"
           body: |
-            每日自动编译 SukiSU-Ultra 内核
-            - 机型： 一加ACE5
-            - 特性：MKSU+SUSFS+VFS+KPM
+            - 机型： 红米k50g
+            - 特性：SukiSU+VFS+KPM
             - 编译时间: ${{ github.event.repository.updated_at }}
-            - 内核版本: ${{ needs.build.outputs.ksuver }}
             - 推荐管理器：[SukiSU-Ultra](https://github.com/ShirkNeko/SukiSU-Ultra/releases)
             - 如果构建的内核版本没变，不必更新！
             - AnyKernel3文件使用 AnyKernel3/Recovery/TWRP 刷入
