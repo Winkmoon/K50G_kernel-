@@ -14,7 +14,7 @@ env:
   KERNEL_VERSION: '5.1'
   KERNEL_NAME: 'ShirokoNeko-K50G-Xinran-4k'
   KERNELSU_VARIANT: 'SukiSU-Ultra'
-  KERNELSU_VERSION: 'main'
+  KERNELSU_VERSION: 'dev'
   SUSFS_ENABLED: '启用'
   VFS_PATCH_ENABLED: '启用'
   WORKSPACE_DIR: 'kernel_workspace'
@@ -80,7 +80,7 @@ jobs:
         id: setup_branch
         run: |
           if [[ "${{ env.KERNELSU_VARIANT }}" == "SukiSU-Ultra" && "${{ env.KERNELSU_VERSION }}" == "main" ]]; then
-            echo "BRANCH=-s susfs-main" >> $GITHUB_ENV
+            echo "BRANCH=-s susfs-dev" >> $GITHUB_ENV
           else
             echo "BRANCH=" >> $GITHUB_ENV
           fi
@@ -93,7 +93,7 @@ jobs:
           curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/refs/heads/main/kernel/setup.sh" | bash ${{ env.BRANCH }}
           
           cd ./KernelSU
-          KSU_VERSION=$(expr $(/usr/bin/git rev-list --count main) "+" 10606)
+          KSU_VERSION=$(expr $(/usr/bin/git rev-list --count dev) "+" 10606)
           echo "KSUVER=$KSU_VERSION" >> $GITHUB_ENV
           echo "ksuver=$KSU_VERSION" >> $GITHUB_OUTPUT
           
