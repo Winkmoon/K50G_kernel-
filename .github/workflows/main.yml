@@ -63,28 +63,20 @@ jobs:
           chmod a+x ~/repo
           sudo mv ~/repo /usr/local/bin/repo
 
-     # - name: 初始化版本库并同步
-     #   working-directory: ${{ env.WORKSPACE_DIR }}
-     #   run: |
-
-     #     git  -u https://github.com/OnePlusOSS/kernel_manifest.git -b oneplus/${{ env.CPU }} -m ${{ env.FEIL }}.xml --depth=1
-     #     repo sync
-          
-     #     find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
-          
-     #     for script_path in kernel_platform/common/scripts/setlocalversion kernel_platform/msm-kernel/scripts/setlocalversion kernel_platform/external/dtc/scripts/setlocalversion; do
-     #       if [ -f "$script_path" ]; then
-     #         sed -i 's/ -dirty//g' "$script_path"
-     #       fi
-     #     done
-
-
       - name: 初始化版本库并同步
         working-directory: ${{ env.WORKSPACE_DIR }}
         run: |
-        # 克隆指定仓库的main分支
 
-        git clone ＂https://github.com/Winkmoon/K50G_kernel-" --depth=1 -b main
+          git  -u https://github.com/OnePlusOSS/kernel_manifest.git -b oneplus/${{ env.CPU }} -m ${{ env.FEIL }}.xml --depth=1
+          repo sync
+          
+          find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
+          
+          for script_path in kernel_platform/common/scripts/setlocalversion kernel_platform/msm-kernel/scripts/setlocalversion kernel_platform/external/dtc/scripts/setlocalversion; do
+            if [ -f "$script_path" ]; then
+              sed -i 's/ -dirty//g' "$script_path"
+            fi
+          done
     
         # 删除受保护的abi导出文件（如果存在）
         find kernel_platform -name "abi_gki_protected_exports_*" -delete || echo "No protected exports found!"
